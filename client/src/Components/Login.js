@@ -1,20 +1,31 @@
 import logo from "../Images/logo-t.png";
 import { Button,Form,Container, Row, Col, Input } from "reactstrap"; //import the Reactstrap
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { userSchemaValidation } from "../Validations/UserValidations";
 const Login = () => {
+  const {register, handleSubmit,
+  formState: {errors}}=useForm({resolver:yupResolver(userSchemaValidation),});
+  const onSubmit = (data) => {
+  console.log("Form Data", data);
+  }
   return (
 
     <div>
 
       <Container>
       <img src={logo}/>
-      <Form>
+      <Form className="div=form" onSubmit={handleSubmit(onSubmit)}>
 
         <Row>
 
           <Col md={3}>
             Username <br></br>
-            <Input type="text"></Input>
+            <Input type="text"
+            name="name"
+            {...register("username")}></Input>
+            <p className="error">{errors.username?.message}</p>
 
           </Col>
 
@@ -24,7 +35,9 @@ const Login = () => {
 
           <Col md={3}> 
               Password<br></br>     
-              <Input type="number"></Input>
+              <input type="number" name="password" 
+               {...register("password")}></input>
+         <p className="error">{errors.password?.message}</p>
 
           </Col>
 

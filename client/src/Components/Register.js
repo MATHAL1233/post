@@ -1,26 +1,36 @@
 import { Button, Col, Input, Row,Container,Form } from "reactstrap";
+import { userSchemaValidation } from "../Validations/UserValidations";
+//import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const Register = () => {
+  const{
+    register,
+    handleSubmit,
+    formState:{errors},
+    }=useForm({resolver:yupResolver(userSchemaValidation),});
+    // Handle form submission
+    const onSubmit = (data) => {
+     console.log("Form Data", data); // You can handle the form submission here
+    
+    }
   return (
     <div>
    <h1>Register</h1>
     <Container>
 
-    <Form>
-
-      <Row>
-
-        <Col md={3}>
-
-        </Col>
-
-      </Row>    
+    <Form className="div=form" onSubmit={handleSubmit(onSubmit)}>
 
 <Row>
 
         <Col md={3}>          
-        Enter your name <br></br>
-        <Input type="text"></Input>
+        Name <br></br>
+        <input type="text"
+        name="name"
+        
+         {...register("name")}></input>
+         <p className="error">{errors.name?.message}</p>
           
         </Col>
 
@@ -29,8 +39,10 @@ const Register = () => {
       <Row>
 
         <Col md={3}>        
-         Enter your email <br></br>
-         <Input type="text"></Input>
+         Email <br></br>
+         <input type="text" name="email" 
+         {...register("email")}></input>
+         <p className="error">{errors.email?.message}</p>
          
    </Col>
 
@@ -39,15 +51,19 @@ const Register = () => {
       <Row>
 
         <Col md={3}>
-         Enter your password <br></br>
-         <Input type="number"></Input>
+         password <br></br>
+         <input type="number" name="password" 
+         {...register("password")}></input>
+         <p className="error">{errors.password?.message}</p>
         </Col>
 
       </Row>
        <Row>
         <Col md={3}>
           Confirm your password <br></br>
-          <Input type="number"></Input>
+          <input type="number" name="confirmPassword"
+          {...register("confirmPassword")}></input>
+          <p className="error">{errors.confirmPassword?.message}</p>
         </Col>
        </Row>
        <Row>
