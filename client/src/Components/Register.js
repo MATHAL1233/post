@@ -54,7 +54,8 @@ const Register = () => {
          password <br></br>
          <input type="number" name="password" 
          {...register("password")}></input>
-         <p className="error">{errors.password?.message}</p>
+         <p className="error">{
+         errors.password?.message}</p>
         </Col>
 
       </Row>
