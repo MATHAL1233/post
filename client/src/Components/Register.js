@@ -3,7 +3,7 @@ import { userSchemaValidation } from "../Validations/UserValidations";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { useSelector } from "react-redux";
 import {
   Button,
   Col,
@@ -17,6 +17,7 @@ import {
 import logo from "../Images/logo-t.png";
 
 const Register = () => {
+  const userList = useSelector((state)=> state.users.value);
   const {
     register,
     handleSubmit,
@@ -26,11 +27,15 @@ const Register = () => {
   // Handle form submission
 
   const onSubmit = (data) => {
-    console.log("Form Data", data); // You can handle the form submission here
+    console.log("Form Data", data);
+
+  
+ 
+
   };
 
   return (
-    <Container>
+    <Container >
       <h1>Register</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
@@ -75,6 +80,22 @@ const Register = () => {
           </Col>
         </Row>
       </Form>
+      <Row>
+        <Col md={6}>
+          List of users
+          <table>
+            <tbody>
+              {userList.map((user) => (
+                <tr key={user.email}>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.password}</td>
+                </tr>
+              ) )}
+            </tbody>
+          </table>
+        </Col>
+      </Row>
     </Container>
   );
 };
