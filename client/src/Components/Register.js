@@ -3,7 +3,7 @@ import { userSchemaValidation } from "../Validations/UserValidations";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import {
   Button,
   Col,
@@ -15,9 +15,15 @@ import {
   Form,
 } from "reactstrap";
 import logo from "../Images/logo-t.png";
-
+import { useDebugValue, useState } from "react";
+import { addUser } from "../Features/UserSlice";
 const Register = () => {
   const userList = useSelector((state)=> state.users.value);
+  const [name,setname]=useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -27,11 +33,19 @@ const Register = () => {
   // Handle form submission
 
   const onSubmit = (data) => {
-    console.log("Form Data", data);
-
+    try {
+      const userData ={
+        name: data.name,
+        email: data.email,
+        password:data.password,
+      };
+      dispatch(addUser(userData));
+      console.log("Form Data", data);
+      alert("Validation all good.");
+    } catch (error){
+      console.log("Error.");
+    }
   
- 
-
   };
 
   return (
@@ -41,14 +55,16 @@ const Register = () => {
         <Row>
           <Col md={6}>
             Name<br></br>
-            <input type="text" name="name" {...register("name")}></input>
+            <input type="text" name="name" {...register("name",{onChange: (e) => setname(e.target.value),
+            })}></input>
           </Col>
           <p className="error">{errors.name?.message}</p>
         </Row>
         <Row>
           <Col md={6}>
             Email<br></br>
-            <input type="email" name="email" {...register("email")}></input>
+            <input type="email" name="email" {...register("email",{onChange: (e) => setemail(e.target.value),
+            })}></input>
           </Col>
           <p className="error">{errors.email?.message}</p>
         </Row>
@@ -58,7 +74,8 @@ const Register = () => {
             <input
               type="password"
               name="password"
-              {...register("password")}
+              {...register("password",{onChange: (e) => setpassword(e.target.value),
+              })}
             ></input>
           </Col>
           <p className="error">{errors.password?.message}</p>
@@ -69,7 +86,8 @@ const Register = () => {
             <input
               type="password"
               name="confirmpassword"
-              {...register("confirmPassword")}
+              {...register("confirmPassword",{onChange: (e) => setconfirmPassword(e.target.value),
+            })}
             ></input>
           </Col>
           <p className="error">{errors.confirmPassword?.message}</p>
@@ -90,6 +108,12 @@ const Register = () => {
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.password}</td>
+                  <td>
+                    <button className="btn btn-danger">Delete</button>
+                  </td>
+                  <td>
+                    <button className="btn btn-primary">Update</button>
+                  </td>
                 </tr>
               ) )}
             </tbody>
