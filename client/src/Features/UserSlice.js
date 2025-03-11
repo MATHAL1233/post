@@ -9,7 +9,7 @@ const initialState = { value: usersData};
     state.value.push(action.payload);
     },
     deleteUser: (state,action) => {
-    state.value.push(action.payload);
+    state.value=state.value.filter((user)=> user.email !== action.payload);
     },
     updateUser: (state,action) =>{
     state.value.push(action.payload);

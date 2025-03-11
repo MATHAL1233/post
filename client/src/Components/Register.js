@@ -16,7 +16,7 @@ import {
 } from "reactstrap";
 import logo from "../Images/logo-t.png";
 import { useDebugValue, useState } from "react";
-import { addUser } from "../Features/UserSlice";
+import { addUser,deleteUser } from "../Features/UserSlice";
 const Register = () => {
   const userList = useSelector((state)=> state.users.value);
   const [name,setname]=useState("");
@@ -46,6 +46,10 @@ const Register = () => {
       console.log("Error.");
     }
   
+  };
+  const handleDelete = (email) => {
+    dispatch(deleteUser(email));
+    alert("User deleted.")
   };
 
   return (
@@ -109,7 +113,7 @@ const Register = () => {
                   <td>{user.email}</td>
                   <td>{user.password}</td>
                   <td>
-                    <button className="btn btn-danger">Delete</button>
+                    <button className="btn btn-dangercd "onClick={() =>handleDelete(user.email)} >Delete</button>
                   </td>
                   <td>
                     <button className="btn btn-primary">Update</button>
