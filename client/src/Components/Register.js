@@ -117,7 +117,7 @@ const Register = () => {
                     <button className="btn btn-dangercd "onClick={() =>handleDelete(user.email)} >Delete</button>
                   </td>
                   <td>
-                    <Link to="/update">
+                    <Link to="/update/{user.emsil}">
                     <button className="btn btn-primary">Update</button>
                     </Link>
                   </td>
