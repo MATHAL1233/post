@@ -17,8 +17,7 @@ import {
 import logo from "../Images/logo-t.png";
 import { useDebugValue, useState } from "react";
 import { addUser,deleteUser } from "../Features/UserSlice";
-import { Link } from "react-router-dom";
-const Register = () => {
+const UpdateUser = () => {
   const userList = useSelector((state)=> state.users.value);
   const [name,setname]=useState("");
   const [email, setemail] = useState("");
@@ -54,8 +53,9 @@ const Register = () => {
   };
 
   return (
-    <Container >
-      <h1>Register</h1>
+    <Container>
+      <h1>Updateuser</h1>
+      <Form onSubmit={handleSubmit(onSubmit)}></Form>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col md={6}>
@@ -99,36 +99,14 @@ const Register = () => {
         </Row>
         <Row>
           <Col md={6}>
-            <Button>Register</Button>
+            <Button>Update User</Button>
           </Col>
         </Row>
       </Form>
-      <Row>
-        <Col md={6}>
-          List of users
-          <table>
-            <tbody>
-              {userList.map((user) => (
-                <tr key={user.email}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.password}</td>
-                  <td>
-                    <button className="btn btn-dangercd "onClick={() =>handleDelete(user.email)} >Delete</button>
-                  </td>
-                  <td>
-                    <Link to="/update">
-                    <button className="btn btn-primary">Update</button>
-                    </Link>
-                  </td>
-                </tr>
-              ) )}
-            </tbody>
-          </table>
-        </Col>
-      </Row>
-    </Container>
+      </Container>
+
   );
+      
 };
 
-export default Register;
+export default UpdateUser;
