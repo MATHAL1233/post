@@ -1,4 +1,5 @@
 import loginImage from "../Images/loginImage.jpg";
+import { useState } from "react";
 import {
   Button,
   Col,
@@ -15,7 +16,18 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchemaValidation } from "../Validations/UserValidations";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+const Login = () => {
 
+  const [email, setemail] = useState();
+  const [password, setpassword] = useState();
+
+  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 const Login = () => {
   const {
     register,
@@ -29,6 +41,27 @@ const Login = () => {
   const onSubmit = (data) => {
     console.log("Form Data", data); // You can handle the form submission here
   };
+  //function that will be invoked when the user clicks the login button
+
+  const handleLogin = () => {
+    const userData = {
+      email,
+      password,
+    };
+
+  };
+  dispatch(login(userData))  //dispatch a login action from the user slice.
+  
+  useEffect(() => {
+    if (isError) {
+      navigate("/login");
+    }
+    if (isSuccess) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, [user, isError, isSuccess]);
   return (
     <div>
       <Container>
@@ -37,7 +70,7 @@ const Login = () => {
           <Row>
             <Col md={5}>
               Username<br></br>
-              <input type="email" name="email" {...register("email")}></input>
+              <input type="email" name="email"onChange={(e) => setemail(e.target.value)}></input>
             </Col>
             <p className="error">{errors.email?.message}</p>
           </Row>
@@ -48,7 +81,7 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                {...register("password")}
+                onChange={(e) => setpassword(e.target.value)}
               ></input>
             </Col>
             <p className="error">{errors.email?.message}</p>
@@ -56,7 +89,12 @@ const Login = () => {
 
           <Row>
             <Col md={5}>
-              <Button>Login</Button>
+            <Button
+            color="primary"
+            className="button"
+            onClick={() => handleLogin()}>
+            Sign in
+            </Button>
             </Col>
           </Row>
 
@@ -71,6 +109,7 @@ const Login = () => {
       </Container>
     </div>
   );
+};
 };
 
 export default Login;
