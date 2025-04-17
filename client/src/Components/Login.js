@@ -21,14 +21,16 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
-
   const [email, setemail] = useState();
   const [password, setpassword] = useState();
 
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
-const Login = () => {
+
+  const user = useSelector((state) => state.users.user);
+  const isSuccess = useSelector((state) => state.users.isSuccess);
+  const isError = useSelector((state) => state.users.isError);
   const {
     register,
     handleSubmit,
@@ -56,12 +58,14 @@ const Login = () => {
     if (isError) {
       navigate("/login");
     }
+
     if (isSuccess) {
       navigate("/");
     } else {
       navigate("/login");
     }
   }, [user, isError, isSuccess]);
+
   return (
     <div>
       <Container>
@@ -70,7 +74,8 @@ const Login = () => {
           <Row>
             <Col md={5}>
               Username<br></br>
-              <input type="email" name="email"onChange={(e) => setemail(e.target.value)}></input>
+              <input type="email" name="email"
+              onChange={(e) => setemail(e.target.value)}></input>
             </Col>
             <p className="error">{errors.email?.message}</p>
           </Row>
@@ -110,6 +115,6 @@ const Login = () => {
     </div>
   );
 };
-};
+
 
 export default Login;
