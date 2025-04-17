@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchemaValidation } from "../Validations/UserValidations";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { login } from "../Features/UserSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
@@ -51,9 +52,9 @@ const Login = () => {
       password,
     };
 
-  };
-  dispatch(login(userData))  //dispatch a login action from the user slice.
   
+  dispatch(login(userData))  //dispatch a login action from the user slice.
+};
   useEffect(() => {
     if (isError) {
       navigate("/login");

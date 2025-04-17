@@ -1,9 +1,11 @@
-import loginImage from "../Images/loginImage.jpg";
+//import loginImage from "../Images/loginImage.jpg";
 import { userSchemaValidation } from "../Validations/UserValidations";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "react-router-dom";
+import { registerUser } from "../Features/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 import {
   Button,
@@ -35,6 +37,7 @@ const Register = () => {
   const [confirmPassword, setconfirmPassword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // Handle form submission
 
   const onSubmit = (data) => {
@@ -46,8 +49,9 @@ const Register = () => {
         password: data.password,
       };
 
-      dispatch(addUser(userData));
+      dispatch(registerUser(userData));
       alert("User added.");
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +126,7 @@ const Register = () => {
           </Col>
         </Row>
       </Form>
-      <Row>
+      {/* <Row>
         <Col md={6}>
           <h1>List of Users</h1>
           <table className="table">
@@ -150,7 +154,7 @@ const Register = () => {
             </tbody>
           </table>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 };

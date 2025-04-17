@@ -1,4 +1,4 @@
-import loginImage from "../Images/loginImage.jpg";
+//import loginImage from "../Images/loginImage.jpg";
 import { userSchemaValidation } from "../Validations/UserValidations";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";

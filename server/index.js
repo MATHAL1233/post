@@ -15,6 +15,7 @@ const connectString =
 mongoose.connect(connectString);
 //API Routes
 
+
 app.post("/registerUser", async (req, res) => {
   try {
     const name = req.body.name;
@@ -34,6 +35,13 @@ app.post("/registerUser", async (req, res) => {
     console.log(error);
   }
 });
+//POST API-logout
+
+app.post("/logout", async (req, res) => {
+
+  res.status(200).json({ message: "Logged out successfully" });
+  
+  });
 
 app.post("/login", async (req, res) => {});
 
