@@ -1,4 +1,4 @@
-//import loginImage from "../Images/loginImage.jpg";
+import loginImage from "../Images/loginImage.jpg";
 import { userSchemaValidation } from "../Validations/UserValidations";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -38,8 +38,8 @@ const Register = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Handle form submission
 
+  // Handle form submission
   const onSubmit = (data) => {
     console.log("Form Data", data); // You can handle the form submission here
     try {
@@ -51,7 +51,7 @@ const Register = () => {
 
       dispatch(registerUser(userData));
       alert("User added.");
-      navigate("/login");
+      navigate("/login"); //redirect to login component
     } catch (error) {
       console.log(error);
     }

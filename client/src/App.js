@@ -13,16 +13,16 @@ import { useSelector } from "react-redux";
 
 const App = () => {
   const email = useSelector((state) => state.users.user.email);
+
   return (
     <Container fluid>
       <Router>
         <Row>
           {email ? (
             <>
-          <Header />
-          </>
-          ) : null} 
-          
+              <Header />
+            </>
+          ) : null}
         </Row>
 
         <Row className="main">
@@ -37,12 +37,11 @@ const App = () => {
         </Row>
 
         <Row>
-          { email ? ( 
+          {email ? (
             <>
-            <Footer/>
+              <Footer />
             </>
-          ) : null }
-         
+          ) : null}
         </Row>
       </Router>
     </Container>

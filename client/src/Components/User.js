@@ -5,16 +5,16 @@ const User = () => {
   const email = useSelector((state) => state.users.user.email);
   const name = useSelector((state) => state.users.user.name);
 
- 
   return (
     <div>
       <h1>User</h1>
+
       <img src={user} className="userImage" />
-      <p> 
+      <p>
         {name}
-         <br /> 
-        {email} 
-        </p>
+        <br />
+        {email}
+      </p>
     </div>
   );
 };
