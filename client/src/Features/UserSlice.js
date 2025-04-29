@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { UsersData } from "../ExampleData";
+import { UsersData } from "../Exampledata.js";
 import axios from "axios";
 
 //const initialState = { value: UsersData }; //list of user is an object with empty array as initial value
