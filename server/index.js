@@ -4,15 +4,20 @@ import express from "express";
 import UserModel from "./Models/UserModel.js";
 import PostModel from "./Models/PostModel.js";
 import bcrypt from "bcrypt";
-
+import * as ENV from "./config.js";
 const app = express();
 app.use(express.json());
-app.use(cors());
-
+//Middleware
+const corsOptions = {
+  origin: ENV.CLIENT_URL, //client URL local
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+};
+app.use(cors(corsOptions));
 //Database connection
 const connectString =
-  "mongodb+srv://mathal:mathal1234@postitcluster.zxzt6sw.mongodb.net/postITDb?retryWrites=true&w=majority&appName=PostITCluster";
-
+  //"mongodb+srv://mathal:mathal1234@postitcluster.zxzt6sw.mongodb.net/postITDb?retryWrites=true&w=majority&appName=PostITCluster";
+`mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.DB_APP_NAME}`;
 mongoose.connect(connectString);
 //API Routes
 
@@ -99,16 +104,13 @@ const postId = req.params.postId;//Extract the ID of the post from the URL
 const userId= req.body.userId;
 try{
  //search the postId if it exists
- const postToUpdate = await PostModel.findOne({ _id: postId });
- if (!postToUpdate) {
-   return res.status(404).json({ msg: "Post not found." });
- }
+ //const postToUpdate = await PostModel.findOne({ _id: postId });
+ //if (!postToUpdate) {
+  // return res.status(404).json({ msg: "Post not found." });
+ //}
 
  //Search the user Id from the array of users who liked the post.
- const userIndex = postToUpdate.likes.users.indexOf(userId);
-
- //indexOf method returns the index of the first occurrence of a specified value in an array.
- //If the value is not found, it returns -1.
+ //const userIndex = postToUpdate.likes.users.indexOf(userId);
  //This code will toogle from like to unlike
  if (userIndex !== -1) {
    // User has already liked the post, so unlike it
@@ -139,6 +141,7 @@ try{
 }
 });
 
-app.listen(3001, () => {
-  console.log("You are connected thank you");
+const port = ENV.PORT || 3001;
+app.listen(port, () => {
+  console.log("You are connected at port: ${port}");
 });

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { UsersData } from "../Exampledata.js";
 import axios from "axios";
-
+import * as ENV from "../config";
 //const initialState = { value: UsersData }; //list of user is an object with empty array as initial value
 const initialState = {
   user: {},
@@ -9,7 +9,6 @@ const initialState = {
   isSuccess: false,
   isError: false,
 };
-
 //Create the thunk
 export const registerUser = createAsyncThunk(
   "users/registerUser",
@@ -46,6 +45,21 @@ export const login = createAsyncThunk("users/login", async (userData) => {
     throw new Error(errorMessage);
   }
 });
+export const likePost = createAsyncThunk("posts/likePost", async (postData) => {
+  try {
+    //Pass along the URL the postId
+    const response = await axios.put(`http://localhost:3001/likePost/${postData.postId}`,
+      {
+        userId: postData.userId,
+      });
+    const post = response.data.post;
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 
 export const logout = createAsyncThunk("/users/logout", async () => {
   try {
@@ -105,10 +119,29 @@ export const userSlice = createSlice({
       .addCase(logout.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
+      })
+      .addCase(likePost.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(likePost.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        //Search the post id from the posts state
+        const updatedPostIndex = state.posts.findIndex(
+          (post) => post._id === action.payload._id
+        );
+//If found, update the likes property of the found post to the current value of the likes
+        if (updatedPostIndex !== -1) {
+          state.posts[updatedPostIndex].likes = action.payload.likes;
+        }
+      })
+      .addCase(likePost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+
       });
   },
 });
 
-export const { addUser, deleteUser, updateUser } = userSlice.actions; //export the function
+export const { addUser, deleteUser, updateUser, } = userSlice.actions; //export the function
 
 export default userSlice.reducer;
