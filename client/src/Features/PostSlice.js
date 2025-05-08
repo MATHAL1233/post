@@ -1,27 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import * as ENV from "../config";
+import * as ENV from "../config.js";
+
 const initialState = {
   posts: [],
   comments: [],
   likes: [],
 };
-export const getPosts = createAsyncThunk("post/getPosts", async () => {
-  try {
-    const response = await axios.get("http://localhost:3001/getPosts");
-    return response.data.posts;
-    console.log(response);
-  } catch (error) {
-    console.log(error);
-  }
-
-});
 
 export const savePost = createAsyncThunk(
   "/posts/savePost",
   async (postData) => {
     try {
-      const response = await axios.post("http://localhost:3001/savePost", {
+      const response = await axios.post(`${ENV.SERVER_URL}/savePost`, {
         postMsg: postData.postMsg,
         email: postData.email,
       });
@@ -32,16 +23,28 @@ export const savePost = createAsyncThunk(
     }
   }
 );
+
+export const getPosts = createAsyncThunk("post/getPosts", async () => {
+  try {
+    const response = await axios.get(`${ENV.SERVER_URL}/getPosts`);
+    return response.data.posts;
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+});
 export const likePost = createAsyncThunk("posts/likePost", async (postData) => {
+  //console.log(postData);
   try {
     //Pass along the URL the postId
     const response = await axios.put(
-      `http://localhost:3001/likePost/${postData.postId}`,
+      `${ENV.SERVER_URL}/likePost/${postData.postId}`,
       {
         userId: postData.userId,
       }
     );
     const post = response.data.post;
+    console.log(post);
     return post;
   } catch (error) {
     console.log(error);
@@ -98,8 +101,7 @@ const postSlice = createSlice({
       .addCase(likePost.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-
+      });
   },
 });
 export default postSlice.reducer;

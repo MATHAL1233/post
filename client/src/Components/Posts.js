@@ -11,8 +11,10 @@ const Posts = () => {
   const posts = useSelector((state) => state.posts.posts);
   const email = useSelector((state) => state.users.user.email);
   const userId = useSelector((state) => state.users.user._id);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handleLikePost = (postId) => {
     const postData = {
       postId: postId,
@@ -21,34 +23,36 @@ const Posts = () => {
     dispatch(likePost(postData));
     navigate("/");
   };
+
   useEffect(() => {
-  dispatch(getPosts());
+    dispatch(getPosts());
   }, []);
+
   return (
     <div className="postsContainer">
-       <h1>Display Posts</h1>
-        <Table className="table table-striped"> 
-          <thead></thead>
-          <tbody>
-             {posts.map((post) => (
-              <tr key={post._id}>
-                 {/* Ensure to add a unique key for each row */}
-                 <td>{post.email}</td>
+      <h1>Display Posts</h1>
+      <Table className="table table-striped">
+        <thead></thead>
+        <tbody>
+          {posts.map((post) => (
+            <tr key={post._id}>
+              {/* Ensure to add a unique key for each row */}
+              <td>{post.email}</td>
               <td>
                 <p> {moment(post.createdAt).fromNow()}</p>
-                {post.postMsg} 
+                {post.postMsg}
                 <p className="likes">
                   <a href="#" onClick={() => handleLikePost(post._id)}>
                     <FaThumbsUp />
                   </a>
                   ({post.likes.count})
-                </p>  
-                </td>
-             </tr>
-            ))}
-           </tbody>
-        </Table>
-     </div> 
+                </p>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div> /* End of posts */
   );
 };
 

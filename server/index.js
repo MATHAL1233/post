@@ -5,19 +5,25 @@ import UserModel from "./Models/UserModel.js";
 import PostModel from "./Models/PostModel.js";
 import bcrypt from "bcrypt";
 import * as ENV from "./config.js";
+
 const app = express();
 app.use(express.json());
 //Middleware
+console.log(ENV);
 const corsOptions = {
   origin: ENV.CLIENT_URL, //client URL local
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // Enable credentials (cookies, authorization headers, etc.)
 };
-app.use(cors(corsOptions));
+
+//app.use(cors(corsOptions));
+app.use(cors());
+
 //Database connection
-const connectString =
-  //"mongodb+srv://mathal:mathal1234@postitcluster.zxzt6sw.mongodb.net/postITDb?retryWrites=true&w=majority&appName=PostITCluster";
-`mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.DB_APP_NAME}`;
+//const connectString =
+ //"mongodb+srv://mathal:mathal1234@postitcluster.zxzt6sw.mongodb.net/postITDb?retryWrites=true&w=majority&appName=PostITCluster";
+const connectString = `mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.DB_APP_NAME}`;
+
 mongoose.connect(connectString);
 //API Routes
 
@@ -88,60 +94,83 @@ app.post("/savePost", async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 });
+//API for displaying posts
 app.get("/getPosts", async (req, res) => {
-try {
-  const posts = await PostModel.find({}).sort({ createdAt: -1 });
-  const countPost = await PostModel.countDocuments({});
-  res.send({ posts: posts, count: countPost });
-}catch (error) {
-  console.error(error);
-  res.status(500).json({ error: "An error occurred" });
-}
-
+  try {
+    // Fetch all posts from the "PostModel" collection, sorted by createdAt in descending order
+    const posts = await PostModel.find({}).sort({ createdAt: -1 });
+    const countPost = await PostModel.countDocuments({});
+    res.send({ posts: posts, count: countPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
 });
-app.put("/likePost/:postId", async(req, res) => {
-const postId = req.params.postId;//Extract the ID of the post from the URL
-const userId= req.body.userId;
-try{
- //search the postId if it exists
- //const postToUpdate = await PostModel.findOne({ _id: postId });
- //if (!postToUpdate) {
-  // return res.status(404).json({ msg: "Post not found." });
- //}
 
- //Search the user Id from the array of users who liked the post.
- //const userIndex = postToUpdate.likes.users.indexOf(userId);
- //This code will toogle from like to unlike
- if (userIndex !== -1) {
-   // User has already liked the post, so unlike it
-   const udpatedPost = await PostModel.findOneAndUpdate(
-     { _id: postId },
-     {
-       $inc: { "likes.count": -1 }, // Decrement the like count $inc and $pull are update operators
-       $pull: { "likes.users": userId }, // Remove userId from the users array
-     },
-     { new: true } // Return the modified document
-   );
-   res.json({ post: udpatedPost, msg: "Post unliked." });
- } else {
-   // User hasn't liked the post, so like it
-   const updatedPost = await PostModel.findOneAndUpdate(
-     { _id: postId },
-     {
-       $inc: { "likes.count": 1 }, // Increment the like count
-       $addToSet: { "likes.users": userId }, // Add userId to the users array if not already present
-     },
-     { new: true } // Return the modified document
-   );
-   res.json({ post: updatedPost, msg: "Post liked." });
+app.put("/likePost/:postId/", async (req, res) => {
+  const postId = req.params.postId;
+
+  const userId = req.body.userId;
+
+  try {
+    //search the postId if it exists
+
+    const postToUpdate = await PostModel.findOne({ _id: postId });
+
+    if (!postToUpdate) {
+      return res.status(404).json({ msg: "Post not found." });
+    }
+
+    //Search the user Id from the array of users who liked the post.
+
+    const userIndex = postToUpdate.likes.users.indexOf(userId);
+
+    //indexOf method returns the index of the first occurrence of a specified value in an array.
+
+    //If the value is not found, it returns -1.
+
+    //This code will toogle from like to unlike
+
+    if (userIndex !== -1) {
+      // User has already liked the post, so unlike it
+
+      const udpatedPost = await PostModel.findOneAndUpdate(
+        { _id: postId },
+
+        {
+          $inc: { "likes.count": -1 }, // Decrement the like count $inc and $pull are update operators
+
+          $pull: { "likes.users": userId }, // Remove userId from the users array
+        },
+
+        { new: true } // Return the modified document
+      );
+
+      res.json({ post: udpatedPost, msg: "Post unliked." });
+    } else {
+      // User hasn't liked the post, so like it
+
+      const updatedPost = await PostModel.findOneAndUpdate(
+        { _id: postId },
+
+        {
+          $inc: { "likes.count": 1 }, // Increment the like count
+
+          $addToSet: { "likes.users": userId }, // Add userId to the users array if not already present
+        },
+
+        { new: true } // Return the modified document
+      );
+
+      res.json({ post: updatedPost, msg: "Post liked." });
     }
   } catch (err) {
-  console.error(err);
-  res.status(500).json({ error: "An error occurred" });
-}
-});
+    console.error(err);
 
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
 const port = ENV.PORT || 3001;
 app.listen(port, () => {
-  console.log("You are connected at port: ${port}");
+  console.log(`You are connected at port: ${port}`);
 });
